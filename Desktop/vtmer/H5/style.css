@@ -1,0 +1,180 @@
+*{
+	margin: 0;
+	padding: 0;
+}	
+body,html{
+	width: 100%;
+	height: 100%;
+	font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+}
+body{
+	position: relative;
+	font-family:"Microsoft Yahei","kaiti";
+}
+@keyframes animatedBackground {
+ 	0% { background-position: center center; 
+ 	}
+
+ 	100% { background-position: center 100%;
+ 	}
+}
+@keyframes animatedBackground1 {
+ 	0% { background-position: center center; 
+ 	}
+
+ 	100% { background-position: center 200%;
+ 	}
+}
+
+.pages{
+	height: 100%;
+	width:100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	background:url(background.png) center center;
+	background-size: 120%;
+ 	background-repeat: repeat;
+	opacity: 0;
+	-webkit-transition:all .5s;
+    animation: animatedBackground1 5s linear infinite alternate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: column; */
+}
+.pageShow{
+	opacity: 1;
+	z-index: 10;
+	display: flex;
+	display: -webkit-flex;
+	background-size: 120%;
+}
+.logo{
+	position: fixed;
+	width: 24.9%;
+	height: 3.3%;
+	top: 3%;
+	left: 6%;
+}
+.homePage{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+.homePage>.logoWrapper{
+    margin-top: 20%;
+    position: relative;
+
+}
+.logoWrapper:after{
+    /* content:url(after.png); */
+    content: ' ';
+    position: absolute;
+    right: -35px;
+    top:4px;
+    display: block;
+    width: 27.5px;
+    height: 241px;
+    background-image: url('after.png');
+    background-size: 100%;
+    /* background: #000; */
+}
+.btn{
+    width: 110px;
+    height: 25px;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 25px;
+    font-size:14px;
+    font-weight: 300;
+    display: inline-block;
+}
+.signBtn{
+    background: rgb(55, 140, 255);
+    color: #fff;
+    border: 1px solid rgb(55, 140, 255);
+}
+/* signpage */
+.signPage{
+    width:223px;
+    height: 75%;
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 5px;
+    background: #fff;
+    display: none;
+    text-align: left;
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 0 29px;
+    /* position: relative */
+}
+.signPage h1{
+    font-size:18px;
+	color: rgb(118, 178, 253);
+	line-height: 25px;
+    font-weight: normal;
+    font-weight: 300;
+    text-align: left;
+    /* margin-top: 11.88%; */
+}
+
+.nameWrapper,.phoneWrapper{
+    margin-top: -15.58%;
+    height: 28px;
+    width: 100%;
+    position: relative;
+}
+.nameWrapper input,.phoneWrapper input{
+    height: 100%;
+    width: 100%;
+    font-size: 14px;
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 5px;
+    /* box-shadow: 1px 1px 1px rgb(197, 197, 197) inset; */
+    color:rgb(51, 51, 51);
+    outline-style: none; 
+    text-indent: 10px;
+    letter-spacing: 1px;
+}
+.nameWrapper::before,.phoneWrapper::before{
+    position: absolute;
+    left: 0;
+    top: -21px;
+    color: rgb(102,104,106);
+	font-size: 12px;
+	text-indent: 5px;
+	letter-spacing: 1px;
+	line-height: 12px;
+}
+.nameWrapper::before{
+    content: '* 姓名';    
+}
+.phoneWrapper::before{
+    content: '* 手机号';    
+}
+.btnWrapper{
+    height: 25px;
+    width: 100%;
+    position: relative;
+}
+.signInBtn{
+    background: rgb(118, 178, 253);
+    width: 76px;
+    color: #fff;
+    border:1px solid rgb(118, 178, 253);
+    float:left;
+}
+.cancelBtn{
+    background: #fff;
+    width: 76px;    
+    color: rgb(128, 128, 128);
+    border: 1px solid rgb(128, 128, 128);
+    float:right;
+}
