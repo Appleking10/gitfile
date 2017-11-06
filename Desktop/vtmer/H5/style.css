@@ -4,8 +4,10 @@
 }	
 body,html{
 	width: 100%;
-	height: 100%;
-	font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    height: 100%;
+    font-size:20px;
+    /* font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif; */
+    font-family: "fzzhengheis-r-gbregular";
 }
 body{
 	position: relative;
@@ -61,7 +63,7 @@ body{
 .homePage{
     width: 100%;
     height: 100%;
-    display: flex;
+    display: none;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
@@ -100,28 +102,33 @@ body{
     border: 1px solid rgb(55, 140, 255);
 }
 /* signpage */
-.signPage{
-    width:223px;
-    height: 75%;
-    border: 1px solid rgb(197, 197, 197);
+.whiteBG{
+    width:11.25rem;
+    height: 21.25rem;
+    border: 1px solid rgba(197, 197, 197,0.8);
     border-radius: 5px;
     background: #fff;
-    display: none;
-    text-align: left;
-    /* display: flex; */
+    display: flex;
     flex-direction: column;
+    padding: 0 29px;
+
+}
+.signPage{
+    text-align: left;
     justify-content: space-around;
     align-items: flex-start;
-    padding: 0 29px;
+    display: none;    
+    /* display: flex; */
     /* position: relative */
 }
 .signPage h1{
-    font-size:18px;
+    font-size: 21px;
 	color: rgb(118, 178, 253);
 	line-height: 25px;
     font-weight: normal;
     font-weight: 300;
     text-align: left;
+   
     /* margin-top: 11.88%; */
 }
 
@@ -157,7 +164,7 @@ body{
     content: '* 姓名';    
 }
 .phoneWrapper::before{
-    content: '* 手机号';    
+    content: '* 手机号码';    
 }
 .btnWrapper{
     height: 25px;
@@ -177,4 +184,89 @@ body{
     color: rgb(128, 128, 128);
     border: 1px solid rgb(128, 128, 128);
     float:right;
+    position: relative;
+}
+.signedPage {
+    margin-top: 3rem;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 0;
+    display: none;
+    position: relative;
+    padding-top: 2rem;
+    /* padding-bottom: 10%; */
+    height: 19.25rem;
+}
+.uploadWrapper {
+    width: 76px;
+    height: 38px;
+    border: 3px solid rgb(236, 236, 236);
+    /* border: 3  */
+    border-radius:0 0 50% 50%/0 0 100% 100%;
+    border-top:none;
+    position: absolute;
+    top:0;
+    z-index: 1;
+    left: 35%;
+}
+/* .uploadWrapper>.background {
+    width: 100%;
+    height: 44px;
+    background: #fff;
+    position: absolute;
+    top: -6px;
+    left: 0;
+    border-radius: 0 0 38px 38px;
+    z-index: 1;
+} */
+.uploadWrapper img{
+    position: absolute;
+    z-index: 2;
+    top: -38px;
+    border-radius: 100%;
+
+}
+.uploadWrapper input{
+    width:74px;
+    height: 74px;
+    position: absolute;
+    top:-40px;
+    left: 0;
+    z-index: 3;
+    opacity: 0;
+}
+.signedPage p{
+    font-size: 21px;
+    color: rgb(144, 152, 155);
+    letter-spacing: 1px;
+    line-height: 33px;
+    text-align: center;
+}
+.signedPage p:nth-of-type(1){
+    margin-top: 15%;
+    line-height: 25px;    
+}
+.countInfo{
+    font-size: 35px;
+    color: rgb(118, 178, 253);
+}
+.signedPage .btnWrapper{
+    height: 60px;
+    width: 74px;
+    /* line-height: 60px; */
+    margin-bottom: 10%;
+}
+.reloadBtn{
+    width: 100%;
+    background: rgb(118, 178, 253);
+    border: 1px solid rgb(118, 178, 253);
+    color: #fff;
+    
+}
+.giveUpBtn{
+    width: 100%;
+    background: #fff;
+    border: 1px solid rgb(128,128,128);
+    color: rgb(128, 128, 128);
+    margin-top: 15px;
 }

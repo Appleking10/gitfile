@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <html lang="en">
 
 <head>
 	<meta charset="UTF-8">
 	<!-- <meta name="viewport" content="width=640, user-scalable=no,target-densitydpi=device-dpi"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="style.css" >
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" href="animate.css">
 	<script src="jquery-2.1.1.min.js"></script>
 	<title>维生数工作室运营组招新面试签到</title>
@@ -18,29 +18,48 @@
 	</section>
 
 	<section id="firstPage" class="pages pageShow">
-	
+
 		<div class="homePage">
 			<div class="logoWrapper">
-					<img src="bigLogo.png" alt="维生数工作室logo" width="55" >					
+				<img src="bigLogo.png" alt="维生数工作室logo" width="55">
 			</div>
 			<div class="signBtn btn">面试签到</div>
 		</div>
-		<div class="signPage">
-			<h1>欢迎来到<br>维生数第一轮面试现场</h1>
+		<div class="signPage whiteBG">
+			<h1>欢迎来到
+				<br>维生数第一轮面试现场</h1>
 			<div class="nameWrapper">
 				<input type="text" placeholder="姓名" class="name">
-				<span class="warm"></span>	
+				<span class="warm"></span>
 			</div>
 			<div class="phoneWrapper">
 				<input type="text" placeholder="111-1111-1111" class="phone">
 				<span class="warm"></span>
 			</div>
 			<div class="btnWrapper">
-				<div class="btn signInBtn">签到</div><div class="btn cancelBtn">取消</div>
+				<div class="btn signInBtn">签到</div>
+				<div class="btn cancelBtn">取消</div>
 			</div>
 		</div>
-		<div class="signedPage">
-			
+		<div class="signedPage whiteBG">
+			<div class="uploadWrapper">
+				<img src="LOGO.png" alt="" width="76px" height="76px">
+				<!-- <div class="background"></div> -->
+				<input type="file" name="avatar" class="uploadBtn" accept="image/*" form="FupForm" id="upImg">
+			</div>
+			<p>
+				<span class="nameInfo"></span>同学
+				<br>你的编号为：
+				<span class="numInfo"></span>
+			</p>
+			<p>你前面还有
+				<br>
+				<span class="countInfo"></span> 位</p>
+			<div class="btnWrapper">
+				<div class="btn reloadBtn">刷新</div>
+				<div class="btn giveUpBtn">放弃</div>
+			</div>
+
 		</div>
 	</section>
 
@@ -48,86 +67,107 @@
 </body>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$('.signBtn').click(function(){
+		let url = "http://www.ustopmoving.xin/upload/";
+		$('.signBtn').click(function () {
 			$('.homePage').addClass('animated fadeOut').hide();
-			$('.signPage').show().addClass('animated fadeIn').css('display','flex');
+			$('.signPage').show().addClass('animated fadeIn').css('display', 'flex');
 		});
-		// $('.attendanceForm').addClass('animated fadeIn');
+		$('.uploadBtn').change(function () {
+			// 传到服务器再传回来
+		});
 		if (localStorage.getItem('ids')) {
-			$('.attendBtn').val('取消签到');
-			$('.name').hide();
-			$('.phone').hide();
-			$('.title').hide();
-			$('.infoWrapper').show();
-			$('.infoName').text(localStorage.getItem('name'));
-			$('.infoNum').text(localStorage.getItem('ids'));
-			$('.attendBtn').addClass('canelattend').removeClass('attend');
+			$('.signedPage').show().css('display', 'flex');
+			$('.homePage').hide().removeClass('animated fadeOut');
+			$('.signPage').hide();
+			console.log('signed');
+
+			$('.uploadWrapper img').attr('src', localStorage.getItem('avatar'));
+			$('.nameInfo').text(localStorage.getItem('name'));
+			$('.numInfo').text(localStorage.getItem('ids'));
+			$('.countInfo').text(localStorage.getItem('count'));
 		} else {
-			$('.attendBtn').val('签到');
-			$('.attendBtn').addClass('attend').removeClass('canelattend');
+			$('.homePage').addClass('animated fadeIn').css('display', 'flex');
+			$('.cancelBtn').click(function () {
+				$('.homePage').show().addClass('animated fadeIn').css('display', 'flex');
+				$('.signPage').addClass('animated fadeOut').hide();
+			});
 		}
-		$('.attendBtn').click(function () {
-			// 取消签到
-			if (localStorage.getItem('ids')) {
-				$.ajax({
-					url: "http://www.ustopmoving.xin/api/cancelSignIn",
-					dataType: "json", //返回格式为json    
-					async: true, //请求是否异步，默认为异步，这也是ajax重要特性    
-					data: {
-						id: localStorage.getItem('ids')
-					}, //参数id值    
-					type: "POST", //请求方式    
-					beforeSend: function () {}, //请求前的处理
-					success: function (data) {
-						// console.log(data.data.id);
-						console.log(data);
-						localStorage.removeItem('ids');
-						localStorage.removeItem('name');
-						// $('#attendance').text('面试签到');
-						history.go(0);
-					}, //请求成功时处理    
-					complete: function () {}, //请求完成的处理    
-					error: function () {
-						console.log("error");
-					} //请求出错处理 
-				});
-			} else {
-				// 签到
-				var name = $('.name').val();
-				var phone = $('.phone').val();
-				console.log(name + phone);
-				if (!name) {
-					$('.nameWrapper .warm').text('请填写姓名');
-				}
-				if (!phone) {
-					$('.phoneWrapper .warm').text('请填写手机');	
-				}
-				$.ajax({
-					url: "http://www.ustopmoving.xin/api/signIn",
-					dataType: "json", //返回格式为json    
-					a步sync: true, //请求是否异步，默认为异，这也是ajax重要特性    
-					data: {
-						name: name,
-						phone: phone
-					}, //参数id值    
-					type: "POST", //请求方式    
-					beforeSend: function () {}, //请求前的处理
-					success: function (data) {
-						// console.log(data.data.id);
-						console.log(data);
-						localStorage.setItem('ids', data.data.id);
-						localStorage.setItem('name', data.data.name);
-						alert(data.data.name + '同学，你的编号为：' + localStorage.getItem('ids'));
-						// $('.attendanceForm').css('display','none');
-						history.go(0);
-					}, //请求成功时处理    
-					complete: function () {}, //请求完成的处理    
-					error: function () {
-						console.log("error");
-					} //请求出错处理 
-				});
-			}
-		})
+		$('.signInBtn').click(function () {
+			var name = $('.name').val();
+			var phone = $('.phone').val();
+			$.ajax({
+				url: "http://www.ustopmoving.xin/api/signIn",
+				dataType: "json", //返回格式为json    
+				a步sync: true, //请求是否异步，默认为异，这也是ajax重要特性    
+				data: {
+					name: name,
+					phone: phone
+				}, //参数id值    
+				type: "POST", //请求方式    
+				beforeSend: function () {}, //请求前的处理
+				success: function (data) {
+					let avatar = url + data.data.avatar;
+					console.log(data);
+					// 本地缓存信息
+					localStorage.setItem('ids', data.data.id);
+					localStorage.setItem('name', data.data.name);
+					localStorage.setItem('avatar', avatar);
+					localStorage.setItem('count', data.data.count);
+					history.go(0);
+					// alert(localStorage.getItem('name')+'同学，你的编号为： ' + localStorage.getItem('ids'));
+					// history.go(0);
+				}, //请求成功时处理    
+				complete: function () {}, //请求完成的处理    
+				error: function () {
+					alert("请稍后重试");
+				} //请求出错处理 
+			});
+		});
+		$('.giveUpBtn').click(function () {
+			$.ajax({
+				url: "http://www.ustopmoving.xin/api/cancelSignIn",
+				dataType: "json", //返回格式为json    
+				async: true, //请求是否异步，默认为异步，这也是ajax重要特性    
+				data: {
+					id: localStorage.getItem('ids')
+				}, //参数id值    
+				type: "POST", //请求方式    
+				beforeSend: function () {}, //请求前的处理
+				success: function (data) {
+					// console.log(data.data.id);
+					console.log(data);
+					localStorage.removeItem('ids');
+					localStorage.removeItem('name');
+					history.go(0);
+				}, //请求成功时处理    
+				complete: function () {}, //请求完成的处理    
+				error: function () {
+					console.log("error");
+				} //请求出错处理 
+			});
+		});
+		$('.reloadBtn').click(function () {
+			$.ajax({
+				url: "http://www.ustopmoving.xin/api/getCounts",
+				dataType: "json", //返回格式为json    
+				async: true, //请求是否异步，默认为异步，这也是ajax重要特性    
+				data: {
+					id: localStorage.getItem('ids')
+				}, //参数id值    
+				type: "POST", //请求方式    
+				beforeSend: function () {}, //请求前的处理
+				success: function (data) {
+					// console.log(data.data.id);
+					console.log(data);
+					localStorage.setItem('count',data.data.counts);
+					history.go(0);
+				}, //请求成功时处理    
+				complete: function () {}, //请求完成的处理    
+				error: function () {
+					console.log("error");
+				} //请求出错处理 
+			});
+		});
 	});;
 </script>
 
