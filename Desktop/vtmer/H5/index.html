@@ -43,9 +43,13 @@
 		</div>
 		<div class="signedPage whiteBG">
 			<div class="uploadWrapper">
-				<img src="LOGO.png" alt="" width="76px" height="76px">
+				<img src="" alt="" width="76px" height="76px" class="avatar">
 				<!-- <div class="background"></div> -->
-				<input type="file" name="avatar" class="uploadBtn" accept="image/*" form="FupForm" id="upImg">
+				<img src="camera.png" alt="" class="cameraIcon">
+				<form id="upImgForm">
+					<input type="file" name="avatar" class="uploadBtn" accept="image/*" id="upImg">
+				</form>
+				
 			</div>
 			<p>
 				<span class="nameInfo"></span>同学
@@ -67,21 +71,42 @@
 </body>
 <script type="text/javascript">
 	$(document).ready(function () {
-		let url = "http://www.ustopmoving.xin/upload/";
+		let url = "https://www.ustopmoving.xin/upload/";
 		$('.signBtn').click(function () {
 			$('.homePage').addClass('animated fadeOut').hide();
 			$('.signPage').show().addClass('animated fadeIn').css('display', 'flex');
 		});
 		$('.uploadBtn').change(function () {
-			// 传到服务器再传回来
+			var avatars = new FormData();
+			avatars.append('avatar',$('#upImg')[0].files[0]);
+			// console.log($('#upImg')[0].files[0])
+			console.log(avatars.get('avatar'));
+			avatars.append('name',localStorage.getItem('name'));
+			avatars.append('phone',localStorage.getItem('phone'));
+			console.log(avatars.get('name'));
+			$.ajax({
+				url: 'https://www.ustopmoving.xin/api/updateAvatar',
+				type: 'POST',
+				contentType: false,
+            	processData: false,
+				data: avatars,
+				success: function (data) {
+				localStorage.setItem('avatar',url+data.data.avatar);
+				$('.uploadWrapper .avatar').attr('src', localStorage.getItem('avatar'));
+				$('.cameraIcon').hide();
+				},
+				error: function (data) {
+					console.log(data);
+				}
+			});
 		});
 		if (localStorage.getItem('ids')) {
 			$('.signedPage').show().css('display', 'flex');
 			$('.homePage').hide().removeClass('animated fadeOut');
 			$('.signPage').hide();
 			console.log('signed');
-
-			$('.uploadWrapper img').attr('src', localStorage.getItem('avatar'));
+			$('.cameraIcon').hide();
+			$('.uploadWrapper .avatar').attr('src', localStorage.getItem('avatar'));
 			$('.nameInfo').text(localStorage.getItem('name'));
 			$('.numInfo').text(localStorage.getItem('ids'));
 			$('.countInfo').text(localStorage.getItem('count'));
@@ -95,10 +120,13 @@
 		$('.signInBtn').click(function () {
 			var name = $('.name').val();
 			var phone = $('.phone').val();
+			if(!name) {
+				$('.nameWrapper .warm').text('请填写姓名');
+			}
 			$.ajax({
-				url: "http://www.ustopmoving.xin/api/signIn",
+				url: "https://www.ustopmoving.xin/api/signIn",
 				dataType: "json", //返回格式为json    
-				a步sync: true, //请求是否异步，默认为异，这也是ajax重要特性    
+				async: true, //请求是否异步，默认为异，这也是ajax重要特性 
 				data: {
 					name: name,
 					phone: phone
@@ -125,7 +153,7 @@
 		});
 		$('.giveUpBtn').click(function () {
 			$.ajax({
-				url: "http://www.ustopmoving.xin/api/cancelSignIn",
+				url: "https://www.ustopmoving.xin/api/cancelSignIn",
 				dataType: "json", //返回格式为json    
 				async: true, //请求是否异步，默认为异步，这也是ajax重要特性    
 				data: {
@@ -148,7 +176,7 @@
 		});
 		$('.reloadBtn').click(function () {
 			$.ajax({
-				url: "http://www.ustopmoving.xin/api/getCounts",
+				url: "https://www.ustopmoving.xin/api/getCounts",
 				dataType: "json", //返回格式为json    
 				async: true, //请求是否异步，默认为异步，这也是ajax重要特性    
 				data: {
@@ -159,7 +187,7 @@
 				success: function (data) {
 					// console.log(data.data.id);
 					console.log(data);
-					localStorage.setItem('count',data.data.counts);
+					localStorage.setItem('count', data.data.counts);
 					history.go(0);
 				}, //请求成功时处理    
 				complete: function () {}, //请求完成的处理    
