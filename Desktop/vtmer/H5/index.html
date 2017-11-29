@@ -9,19 +9,18 @@
 	<link rel="stylesheet" href="animate.css">
 	<script src="jquery-2.1.1.min.js"></script>
 	<title>维生数工作室运营组招新面试签到</title>
-
 </head>
 
 <body>
 	<section class="logo" style="z-index: 20;">
-		<img src="LOGO.png" alt="工作室logo" width="100%" />
+		<img src="img/LOGO.png" alt="工作室logo" width="100%" />
 	</section>
 
 	<section id="firstPage" class="pages pageShow">
 
 		<div class="homePage">
 			<div class="logoWrapper">
-				<img src="bigLogo.png" alt="维生数工作室logo" width="55">
+				<img src="img/bigLogo.png" alt="维生数工作室logo" width="55">
 			</div>
 			<div class="signBtn btn">面试签到</div>
 		</div>
@@ -45,11 +44,11 @@
 			<div class="uploadWrapper">
 				<img src="" alt="" width="76px" height="76px" class="avatar">
 				<!-- <div class="background"></div> -->
-				<img src="camera.png" alt="" class="cameraIcon">
+				<img src="img/camera.png" alt="" class="cameraIcon">
 				<form id="upImgForm">
 					<input type="file" name="avatar" class="uploadBtn" accept="image/*" id="upImg">
 				</form>
-				
+
 			</div>
 			<p>
 				<span class="nameInfo"></span>同学
@@ -73,27 +72,29 @@
 	$(document).ready(function () {
 		let url = "https://www.ustopmoving.xin/upload/";
 		$('.signBtn').click(function () {
-			$('.homePage').addClass('animated fadeOut').hide();
-			$('.signPage').show().addClass('animated fadeIn').css('display', 'flex');
+			$('.homePage').removeClass('animated fadeIn').addClass('animated fadeOut').hide();
+			$('.signPage').show().removeClass('animated fadeOut').addClass('animated fadeIn').css('display', 'flex');
 		});
 		$('.uploadBtn').change(function () {
 			var avatars = new FormData();
-			avatars.append('avatar',$('#upImg')[0].files[0]);
+			avatars.append('avatar', $('#upImg')[0].files[0]);
 			// console.log($('#upImg')[0].files[0])
-			console.log(avatars.get('avatar'));
-			avatars.append('name',localStorage.getItem('name'));
-			avatars.append('phone',localStorage.getItem('phone'));
+			// console.log(avatars.get('avatar'));
+			avatars.append('name', localStorage.getItem('name'));
+			avatars.append('phone', localStorage.getItem('phone'));
 			console.log(avatars.get('name'));
 			$.ajax({
 				url: 'https://www.ustopmoving.xin/api/updateAvatar',
 				type: 'POST',
 				contentType: false,
-            	processData: false,
+				processData: false,
 				data: avatars,
 				success: function (data) {
-				localStorage.setItem('avatar',url+data.data.avatar);
-				$('.uploadWrapper .avatar').attr('src', localStorage.getItem('avatar'));
-				$('.cameraIcon').hide();
+					console.log(data);
+					localStorage.setItem('avatar', url + data.data.avatar);
+					$('.uploadWrapper .avatar').attr('src', localStorage.getItem('avatar'));
+					$('.cameraIcon').hide();
+					// history.gp(0);
 				},
 				error: function (data) {
 					console.log(data);
@@ -112,44 +113,64 @@
 			$('.countInfo').text(localStorage.getItem('count'));
 		} else {
 			$('.homePage').addClass('animated fadeIn').css('display', 'flex');
-			$('.cancelBtn').click(function () {
-				$('.homePage').show().addClass('animated fadeIn').css('display', 'flex');
-				$('.signPage').addClass('animated fadeOut').hide();
-			});
 		}
+		$('.cancelBtn').click(function () {
+				$('.signPage').removeClass('animated fadeIn').addClass('animated fadeOut').hide();
+				$('.homePage').show().removeClass('animated fadeOut').addClass('animated fadeIn').css('display', 'flex');
+			});
+		
 		$('.signInBtn').click(function () {
 			var name = $('.name').val();
 			var phone = $('.phone').val();
-			if(!name) {
-				$('.nameWrapper .warm').text('请填写姓名');
+			if (!name || !phone) {
+				if (!name) {
+					$('.nameWrapper .warm').text('请填写姓名');
+				} else {
+					$('.nameWrapper .warm').text(' ');					
+				}
+				if (!phone) {
+					$('.phoneWrapper .warm').text('请填写手机');
+				}else {
+					$('.phoneWrapper .warm').text(' ');
+				}
+			} else {
+				$.ajax({
+					url: "https://www.ustopmoving.xin/api/signIn",
+					dataType: "json", //返回格式为json    
+					async: true, //请求是否异步，默认为异，这也是ajax重要特性 
+					data: {
+						name: name,
+						phone: phone
+					}, //参数id值    
+					type: "POST", //请求方式    
+					beforeSend: function () {}, //请求前的处理
+					success: function (data) {
+						console.log(data);
+						if(data.status_code === "200"){
+							let avatar = url + data.data.avatar;
+							// 本地缓存信息
+							localStorage.setItem('ids', data.data.id);
+							localStorage.setItem('name', data.data.name);
+							localStorage.setItem('avatar', avatar);
+							localStorage.setItem('count', data.data.count);
+							history.go(0);
+						} else if(data.status_code === "5003"){
+							alert("请先前往官网报名");
+							window.location.href="https://vtmer.obstacle.cn/apply.html";
+						} else{
+							alert("你已经签到过啦");
+							history.go(0);
+						}
+						
+
+					}, //请求成功时处理    
+					complete: function () {}, //请求完成的处理    
+					error: function () {
+						alert("请稍后重试");
+					} //请求出错处理 
+				});
 			}
-			$.ajax({
-				url: "https://www.ustopmoving.xin/api/signIn",
-				dataType: "json", //返回格式为json    
-				async: true, //请求是否异步，默认为异，这也是ajax重要特性 
-				data: {
-					name: name,
-					phone: phone
-				}, //参数id值    
-				type: "POST", //请求方式    
-				beforeSend: function () {}, //请求前的处理
-				success: function (data) {
-					let avatar = url + data.data.avatar;
-					console.log(data);
-					// 本地缓存信息
-					localStorage.setItem('ids', data.data.id);
-					localStorage.setItem('name', data.data.name);
-					localStorage.setItem('avatar', avatar);
-					localStorage.setItem('count', data.data.count);
-					history.go(0);
-					// alert(localStorage.getItem('name')+'同学，你的编号为： ' + localStorage.getItem('ids'));
-					// history.go(0);
-				}, //请求成功时处理    
-				complete: function () {}, //请求完成的处理    
-				error: function () {
-					alert("请稍后重试");
-				} //请求出错处理 
-			});
+
 		});
 		$('.giveUpBtn').click(function () {
 			$.ajax({
@@ -166,6 +187,8 @@
 					console.log(data);
 					localStorage.removeItem('ids');
 					localStorage.removeItem('name');
+					localStorage.removeItem('avatar');
+					localStorage.removeItem('count');
 					history.go(0);
 				}, //请求成功时处理    
 				complete: function () {}, //请求完成的处理    
